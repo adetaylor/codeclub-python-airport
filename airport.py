@@ -31,6 +31,9 @@ class Plane(codeclub.CodeClubFreeRotatingSprite):
 		self.move_to((x, y))
 		self.point_in_direction(direction)
 
+	def update(self):
+		self.move(1)
+
 def main():
 	pygame.init()
 	screensize = (800, 483)
@@ -39,13 +42,19 @@ def main():
 	wallpaper = codeclub.load_image('stansted-map.png')
 	wallpaper = pygame.transform.scale(wallpaper, (screensize))
 
-	plane = Plane(screensize)
-	allplanes = pygame.sprite.Group((plane))
+	allplanes = pygame.sprite.Group()
+	chance_of_new_plane_in_next_tick = 1
 	
 	clock = pygame.time.Clock()
 	
 	while True:
 		clock.tick(60)
+		if random.random() < chance_of_new_plane_in_next_tick:
+			newplane = Plane(screensize)
+			allplanes.add(newplane)
+			chance_of_new_plane_in_next_tick = -0.003
+		else:
+			chance_of_new_plane_in_next_tick += 0.0001
 
 		for event in pygame.event.get():
 			if event.type == QUIT:
@@ -53,7 +62,8 @@ def main():
 			elif event.type == KEYDOWN and event.key == K_ESCAPE:
 				return
 
-		plane.move(1)
+		allplanes.update()
+		# print "Number of planes is ",len(allplanes)
 
 		screen.blit(wallpaper, (0, 0))
 		allplanes.draw(screen)
