@@ -30,11 +30,29 @@ class Plane(codeclub.CodeClubFreeRotatingSprite):
 		self.set_costume('plane_icon.png', 60)
 		self.move_to((x, y))
 		self.point_in_direction(direction)
+		self.course = []
 
 	def update(self):
 		self.move(1)
 		if not self.rect.colliderect(self.area):
 			self.kill()
+
+		if len(self.course) > 0: # only do this stuff if a course has been set
+			nextfix = self.course[0]
+			if pygame.sprite.collide_rect(self, nextfix):
+				self.course.pop(0) # remove this item from the course...
+				nextfix.kill() # ... and remove this fix from 'allfixes' so it is no longer drawn.
+			else:
+				self.point_towards(nextfix)
+
+	def add_destination(self, position):
+		self.course.append(position)
+
+class Fix(codeclub.CodeClubSprite):
+	def __init__(self, pos):
+		codeclub.CodeClubSprite.__init__(self)
+		self.set_costume('fix.png', 4)
+		self.move_to(pos)
 
 def main():
 	pygame.init()
@@ -45,10 +63,13 @@ def main():
 	wallpaper = pygame.transform.scale(wallpaper, (screensize))
 
 	allplanes = pygame.sprite.Group()
+	allfixes = pygame.sprite.Group()
 	chance_of_new_plane_in_next_tick = 1
 	
 	clock = pygame.time.Clock()
-	
+
+	draggingplane = None
+
 	while True:
 		clock.tick(60)
 		if random.random() < chance_of_new_plane_in_next_tick:
@@ -63,6 +84,13 @@ def main():
 				return
 			elif event.type == KEYDOWN and event.key == K_ESCAPE:
 				return
+			elif event.type == MOUSEBUTTONDOWN:
+				for plane in allplanes:
+					if plane.rect.collidepoint(pygame.mouse.get_pos()):
+						draggingplane = plane
+						break
+			elif event.type == MOUSEBUTTONUP:
+				draggingplane = None
 
 		allplanes.update()
 		for planea in allplanes:
@@ -71,8 +99,14 @@ def main():
 					if pygame.sprite.collide_mask(planea, planeb):
 						return
 
+		if not draggingplane == None:
+			fix = Fix(pygame.mouse.get_pos())
+			draggingplane.add_destination(fix)
+			allfixes.add(fix)
+
 		screen.blit(wallpaper, (0, 0))
 		allplanes.draw(screen)
+		allfixes.draw(screen)
 		pygame.display.flip()
 
 if __name__ == '__main__': main()
