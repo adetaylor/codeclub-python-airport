@@ -33,6 +33,8 @@ class Plane(codeclub.CodeClubFreeRotatingSprite):
 
 	def update(self):
 		self.move(1)
+		if not self.rect.colliderect(self.area):
+			self.kill()
 
 def main():
 	pygame.init()
@@ -63,7 +65,6 @@ def main():
 				return
 
 		allplanes.update()
-		# print "Number of planes is ",len(allplanes)
 
 		screen.blit(wallpaper, (0, 0))
 		allplanes.draw(screen)
