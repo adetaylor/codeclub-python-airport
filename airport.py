@@ -65,6 +65,11 @@ def main():
 				return
 
 		allplanes.update()
+		for planea in allplanes:
+			for planeb in allplanes:
+				if not planea == planeb:
+					if pygame.sprite.collide_mask(planea, planeb):
+						return
 
 		screen.blit(wallpaper, (0, 0))
 		allplanes.draw(screen)
