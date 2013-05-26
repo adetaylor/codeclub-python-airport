@@ -72,12 +72,14 @@ def main():
 	allplanes = pygame.sprite.Group()
 	allfixes = pygame.sprite.Group()
 	allrunways = pygame.sprite.Group()
-	allrunways.add(Runway())
+	runway = Runway()
+	allrunways.add(runway)
 	chance_of_new_plane_in_next_tick = 1
 	
 	clock = pygame.time.Clock()
 
 	draggingplane = None
+	score = 0
 
 	while True:
 		clock.tick(60)
@@ -107,6 +109,10 @@ def main():
 				if not planea == planeb:
 					if pygame.sprite.collide_mask(planea, planeb):
 						return
+			if pygame.sprite.collide_mask(planea, runway):
+				planea.kill()
+				score = score + 1
+				print "Score: ", score
 
 		if not draggingplane == None:
 			fix = Fix(pygame.mouse.get_pos())
