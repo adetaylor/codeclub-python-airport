@@ -48,6 +48,11 @@ class Plane(codeclub.CodeClubFreeRotatingSprite):
 	def add_destination(self, position):
 		self.course.append(position)
 
+	def clear_destinations(self):
+		for c in self.course:
+			c.kill()
+		self.course = []
+
 class Fix(codeclub.CodeClubSprite):
 	def __init__(self, pos):
 		codeclub.CodeClubSprite.__init__(self)
@@ -99,6 +104,7 @@ def main():
 				for plane in allplanes:
 					if plane.rect.collidepoint(pygame.mouse.get_pos()):
 						draggingplane = plane
+						draggingplane.clear_destinations()
 						break
 			elif event.type == MOUSEBUTTONUP:
 				draggingplane = None
