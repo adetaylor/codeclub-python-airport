@@ -54,6 +54,13 @@ class Fix(codeclub.CodeClubSprite):
 		self.set_costume('fix.png', 4)
 		self.move_to(pos)
 
+class Runway(codeclub.CodeClubFreeRotatingSprite):
+	def __init__(self):
+		codeclub.CodeClubSprite.__init__(self)
+		self.set_costume('runway.png', 150)
+		self.move_to((410,270))
+		self.point_in_direction(130)
+
 def main():
 	pygame.init()
 	screensize = (800, 483)
@@ -64,6 +71,8 @@ def main():
 
 	allplanes = pygame.sprite.Group()
 	allfixes = pygame.sprite.Group()
+	allrunways = pygame.sprite.Group()
+	allrunways.add(Runway())
 	chance_of_new_plane_in_next_tick = 1
 	
 	clock = pygame.time.Clock()
@@ -105,8 +114,9 @@ def main():
 			allfixes.add(fix)
 
 		screen.blit(wallpaper, (0, 0))
-		allplanes.draw(screen)
+		allrunways.draw(screen)
 		allfixes.draw(screen)
+		allplanes.draw(screen)
 		pygame.display.flip()
 
 if __name__ == '__main__': main()
