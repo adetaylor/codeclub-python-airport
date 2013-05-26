@@ -19,7 +19,12 @@ from math import sqrt, degrees, atan, cos, sin, radians
 # we use the services of another program called 'pygame' to do most of the work.
 #######################################################################################
 
+image_cache = {}
+
 def load_image(name, colorkey=None):
+	key = (name, colorkey)
+	if key in image_cache:
+		return image_cache[key]
 	main_dir = os.path.split(os.path.abspath(__file__))[0]
 	fullname = os.path.join(main_dir, 'data', name)
 	try:
@@ -32,7 +37,8 @@ def load_image(name, colorkey=None):
 		if colorkey is -1:
 		    colorkey = image.get_at((0,0))
 		image.set_colorkey(colorkey, RLEACCEL)
-	return image #, image.get_rect()
+	image_cache[key] = image
+	return image
 
 def load_images(*files):
 	imgs = []
