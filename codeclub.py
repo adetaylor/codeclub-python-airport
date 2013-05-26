@@ -158,7 +158,10 @@ class CodeClubSprite(pygame.sprite.Sprite):
 
 	def get_position(self):
 		return self.rect.center
-		    
+
+	def get_direction(self):
+		return self.direction
+
 	def move(self, distance = 1):
 		# PyGame co-ordinates are integers yet we want to be able
 		# to move <1 unit, so we keep track of fractional movements
