@@ -116,10 +116,14 @@ def main():
 					if pygame.sprite.collide_mask(planea, planeb):
 						return
 			if pygame.sprite.collide_mask(planea, runway):
-				planea.clear_destinations()
-				planea.kill()
-				score = score + 1
-				print "Score: ", score
+				# Plane is flying over runway...
+				heading = planea.get_direction()
+				if (heading > 120 and heading < 140) or (heading > 300 and heading < 340):
+					# And it's in the right direction to land!
+					planea.clear_destinations()
+					planea.kill()
+					score = score + 1
+					print "Score: ", score
 
 		if not draggingplane == None:
 			fix = Fix(pygame.mouse.get_pos())
