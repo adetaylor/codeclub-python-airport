@@ -116,6 +116,7 @@ def main():
 					if pygame.sprite.collide_mask(planea, planeb):
 						return
 			if pygame.sprite.collide_mask(planea, runway):
+				planea.clear_destinations()
 				planea.kill()
 				score = score + 1
 				print "Score: ", score
