@@ -19,26 +19,20 @@ from math import sqrt, degrees, atan, cos, sin, radians
 # we use the services of another program called 'pygame' to do most of the work.
 #######################################################################################
 
-image_cache = {}
-
 def load_image(name, colorkey=None):
-	key = (name, colorkey)
-	if key in image_cache:
-		return image_cache[key]
 	main_dir = os.path.split(os.path.abspath(__file__))[0]
 	fullname = os.path.join(main_dir, 'data', name)
 	try:
 		image = pygame.image.load(fullname)
-	except pygame.error, message:
-		print 'Cannot load image:', fullname
-		raise SystemExit, message
+	except pygame.error as message:
+		print('Cannot load image:', fullname)
+		raise SystemExit(message)
 	image = image.convert_alpha()
 	if colorkey is not None:
 		if colorkey is -1:
 		    colorkey = image.get_at((0,0))
 		image.set_colorkey(colorkey, RLEACCEL)
-	image_cache[key] = image
-	return image
+	return image #, image.get_rect()
 
 def load_images(*files):
 	imgs = []
@@ -59,9 +53,9 @@ def load_sound(name):
 	fullname = os.path.join(main_dir, 'data', name)
 	try:
 		sound = pygame.mixer.Sound(fullname)
-	except pygame.error, message:
-		print 'Cannot load sound:', fullname
-		raise SystemExit, message
+	except pygame.error as message:
+		print('Cannot load sound:', fullname)
+		raise SystemExit(message)
 	return sound
 
 def start_music(file):
@@ -71,7 +65,7 @@ def start_music(file):
 		pygame.mixer.music.load(music)
 		pygame.mixer.music.play(-1)
 
-def aspect_scale(img,(bx,by)):
+def aspect_scale(img,bx,by):
 	""" Scales 'img' to fit into box bx/by.
 	This method will retain the original image's aspect ratio """
 	# Thanks to Frank Raiser (crashchaos at gmx.net)
@@ -119,7 +113,7 @@ class CodeClubSprite(pygame.sprite.Sprite):
 	def set_costume(self, name, size):
 		self.image = load_image(name, -1)
 		self.rect = self.image.get_rect()
-		self.image = self.orig_image = aspect_scale(self.image, (size, size))
+		self.image = self.orig_image = aspect_scale(self.image, size, size)
 		self.rect.width = self.rect.height = size
 
 	def turn_right(self, degrees = 10):
