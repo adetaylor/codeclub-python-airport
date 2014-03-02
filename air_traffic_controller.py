@@ -123,7 +123,7 @@ def main():
 					planea.clear_destinations()
 					planea.kill()
 					score = score + 1
-					print "Score: ", score
+					print("Score: ", score)
 
 		if not draggingplane == None:
 			fix = Fix(pygame.mouse.get_pos())
